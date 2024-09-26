@@ -24,27 +24,27 @@ int main() {
     int pasirinkimas;
 
     try {
-        std::cout << "Pasirinkite: 1 - ?vesti duomenis, 2 - nuskaityti i� failo: ";
+        std::cout << "Pasirinkite: 1 - Įvesti duomenis, 2 - nuskaityti iš failo: ";
         std::cin >> pasirinkimas;
         std::cin.ignore(); // Clear newline character
 
         if (pasirinkimas == 1) {
             // Manual input with random grade generation
             int kiekMokiniu;
-            std::cout << "Kiek student? norite ?vesti? ";
+            std::cout << "Kiek studentų norite įvesti? ";
             std::cin >> kiekMokiniu;
             std::cin.ignore();
 
             for (int i = 0; i < kiekMokiniu; ++i) {
                 Studentas studentas;
-                std::cout << "?veskite " << i + 1 << "-ojo studento vard?: ";
+                std::cout << "Įveskite " << i + 1 << "-ojo studento vardą: ";
                 std::getline(std::cin, studentas.vardas);
-                std::cout << "?veskite " << i + 1 << "-ojo studento pavard?: ";
+                std::cout << "Įveskite " << i + 1 << "-ojo studento pavardę: ";
                 std::getline(std::cin, studentas.pavarde);
 
                 // Ask how many homework grades to generate
                 int ndKiekis;
-                std::cout << "Kiek nam? darb? pa�ymi? norite sugeneruoti? ";
+                std::cout << "Kiek namų darbų pažymių norite sugeneruoti? ";
                 std::cin >> ndKiekis;
                 std::cin.ignore();
 
@@ -56,7 +56,7 @@ int main() {
         else if (pasirinkimas == 2) {
             // Read from file
             std::string failoPavadinimas;
-            std::cout << "?veskite failo pavadinim?: ";
+            std::cout << "Įveskite failo pavadinimą: ";
             std::getline(std::cin, failoPavadinimas);
             nuskaititiIsFailo(failoPavadinimas, studentai);
         }
@@ -98,7 +98,7 @@ int main() {
         std::cerr << "Klaida: " << e.what() << std::endl;
     }
     catch (...) {
-        std::cerr << "?vyko ne�inoma klaida." << std::endl;
+        std::cerr << "Įvyko nežinoma klaida." << std::endl;
     }
 
     return 0;
