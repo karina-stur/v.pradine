@@ -67,7 +67,7 @@ int main() {
     }
     else if (pasirinkimas == 2) {
         std::string failoPavadinimas;
-        std::cout << "Iveskite failo pavadinimą: ";
+        std::cout << "Iveskite failo pavadinima: ";
         std::getline(std::cin, failoPavadinimas);
 
         try {
