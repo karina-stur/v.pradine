@@ -49,7 +49,7 @@ double skaiciuotiGalutiniVidurki(const std::vector<int>& namuDarbai, int egzamin
         vidurkis += nd;
     }
     vidurkis /= namuDarbai.size();
-    return 0.5 * vidurkis + 0.5 * egzaminas;
+    return 0.4 * vidurkis + 0.6 * egzaminas;
 }
 
 double skaiciuotiGalutiniMediana(std::vector<int> namuDarbai, int egzaminas) {
@@ -67,7 +67,7 @@ double skaiciuotiGalutiniMediana(std::vector<int> namuDarbai, int egzaminas) {
     else {
         mediana = namuDarbai[size / 2];
     }
-    return 0.5 * mediana + 0.5 * egzaminas;
+    return 0.4 * mediana + 0.6 * egzaminas;
 }
 
 void surikiuotiStudentus(std::vector<Studentas>& studentai) {
