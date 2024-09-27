@@ -13,7 +13,7 @@ void nuskaititiIsFailo(const std::string& failoPavadinimas, std::vector<Studenta
     }
 
     std::string header;
-    std::getline(failas, header); // Read the first line (header)
+    std::getline(failas, header);
 
     Studentas studentas;
     std::string eilute;
@@ -29,7 +29,7 @@ void nuskaititiIsFailo(const std::string& failoPavadinimas, std::vector<Studenta
         }
 
         if (studentas.namuDarbai.empty()) {
-            throw std::runtime_error("Nėra namų darbų duomenų studentui: " + studentas.vardas + " " + studentas.pavarde);
+            throw std::runtime_error("Nera namu darbu duomenu studentui: " + studentas.vardas + " " + studentas.pavarde);
         }
 
         studentas.egzaminas = studentas.namuDarbai.back();
@@ -41,7 +41,7 @@ void nuskaititiIsFailo(const std::string& failoPavadinimas, std::vector<Studenta
 
 double skaiciuotiGalutiniVidurki(const std::vector<int>& namuDarbai, int egzaminas) {
     if (namuDarbai.empty()) {
-        throw std::runtime_error("Namu darbų sąrašas negali būti tuščias.");
+        throw std::runtime_error("Namu darbu sarasas negali buti tuscias.");
     }
 
     double vidurkis = 0;
@@ -54,7 +54,7 @@ double skaiciuotiGalutiniVidurki(const std::vector<int>& namuDarbai, int egzamin
 
 double skaiciuotiGalutiniMediana(std::vector<int> namuDarbai, int egzaminas) {
     if (namuDarbai.empty()) {
-        throw std::runtime_error("Namu darbų sąrašas negali būti tuščias.");
+        throw std::runtime_error("Namu darbu sarasas negali buti tuscias.");
     }
 
     std::sort(namuDarbai.begin(), namuDarbai.end());
@@ -72,6 +72,6 @@ double skaiciuotiGalutiniMediana(std::vector<int> namuDarbai, int egzaminas) {
 
 void surikiuotiStudentus(std::vector<Studentas>& studentai) {
     std::sort(studentai.begin(), studentai.end(), [](const Studentas& a, const Studentas& b) {
-        return a.pavarde < b.pavarde; 
+        return a.pavarde < b.pavarde;
         });
 }
