@@ -9,6 +9,7 @@ void nuskaititiIsFailo(const std::string& failoPavadinimas, std::vector<Studenta
 double skaiciuotiGalutiniVidurki(const std::vector<int>& namuDarbai, int egzaminas);
 double skaiciuotiGalutiniMediana(std::vector<int> namuDarbai, int egzaminas);
 void surikiuotiStudentus(std::vector<Studentas>& studentai);
+void generuotiStudentuFailus();
 
 #endif // FUNKCIJOS_H
 
