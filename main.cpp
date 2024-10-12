@@ -41,29 +41,13 @@ int main() {
     std::vector<Studentas> studentai;
     int pasirinkimas;
 
-    std::cout << "Pasirinkite: 1 - ivesti duomenis, 2 - nuskaityti is failo: ";
+    std::cout << "Pasirinkite: 1 - generuoti failus, 2 - nuskaityti is failo: ";
     std::cin >> pasirinkimas;
     std::cin.ignore();
 
     if (pasirinkimas == 1) {
-        int kiekMokiniu;
-        std::cout << "Kiek studentu norite ivesti? ";
-        kiekMokiniu = readInteger();
-
-        for (int i = 0; i < kiekMokiniu; ++i) {
-            Studentas studentas;
-            std::cout << "Iveskite " << i + 1 << "-ojo studento varda: ";
-            std::getline(std::cin, studentas.vardas);
-            std::cout << "Iveskite " << i + 1 << "-ojo studento pavarde: ";
-            std::getline(std::cin, studentas.pavarde);
-
-            int ndKiekis;
-            std::cout << "Kiek namu darbu pazymiu norite sugeneruoti? ";
-            ndKiekis = readInteger();
-
-            generuotiPazymius(studentas, ndKiekis);
-            studentai.push_back(studentas);
-        }
+        generuotiStudentuFailus();
+        return 0;
     }
     else if (pasirinkimas == 2) {
         std::string failoPavadinimas;
