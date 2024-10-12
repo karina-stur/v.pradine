@@ -4,6 +4,7 @@
 #include <random>
 #include <stdexcept>
 #include <limits>
+#include <fstream>
 #include "funkcijos.h"
 
 int generuotiAtsitiktiniPazymi(int min = 1, int max = 10) {
@@ -37,19 +38,25 @@ int readInteger() {
     return value;
 }
 
-void spausdintiStudentuGrupe(const std::vector<Studentas>& studentai, bool pagalVidurki) {
-    std::cout << std::left << std::setw(15) << "Vardas"
+void isaugotiStudentuGrupe(const std::vector<Studentas>& studentai, const std::string& failoPavadinimas, bool pagalVidurki) {
+    std::ofstream failas(failoPavadinimas);
+    if (!failas.is_open()) {
+        std::cerr << "Nepavyko sukurti failo: " << failoPavadinimas << std::endl;
+        return;
+    }
+
+    failas << std::left << std::setw(15) << "Vardas"
         << std::setw(15) << "Pavarde"
         << std::setw(20) << "Galutinis (Vid.)"
         << std::setw(20) << "Galutinis (Med.)"
         << std::endl;
-    std::cout << "--------------------------------------------------------------" << std::endl;
+    failas << "--------------------------------------------------------------" << std::endl;
 
     for (const auto& studentas : studentai) {
         double galutinisVid = skaiciuotiGalutiniVidurki(studentas.namuDarbai, studentas.egzaminas);
         double galutinisMed = skaiciuotiGalutiniMediana(studentas.namuDarbai, studentas.egzaminas);
 
-        std::cout << std::left << std::setw(15) << studentas.vardas
+        failas << std::left << std::setw(15) << studentas.vardas
             << std::setw(15) << studentas.pavarde
             << std::setw(20) << std::fixed << std::setprecision(2) << galutinisVid
             << std::setw(20) << std::fixed << std::setprecision(2) << galutinisMed
@@ -57,9 +64,12 @@ void spausdintiStudentuGrupe(const std::vector<Studentas>& studentai, bool pagal
     }
 }
 
-void grupuotiStudentus(const std::vector<Studentas>& studentai, bool pagalVidurki) {
+void grupuotiIrIssaugotiStudentus(const std::vector<Studentas>& studentai, bool pagalVidurki) {
     std::vector<Studentas> nuskriaustukai;
     std::vector<Studentas> kietiakai;
+
+    nuskriaustukai.reserve(studentai.size() / 2);
+    kietiakai.reserve(studentai.size() / 2);
 
     for (const auto& studentas : studentai) {
         double galutinisBalas = pagalVidurki
@@ -74,15 +84,17 @@ void grupuotiStudentus(const std::vector<Studentas>& studentai, bool pagalVidurk
         }
     }
 
-    std::cout << "\n--- Nuskriaustukai (Galutinis balas < 5) ---\n";
-    spausdintiStudentuGrupe(nuskriaustukai, pagalVidurki);
+    std::string failoPavadinimasNuskriaustukai = pagalVidurki ? "nuskriaustukai_vidurkis.txt" : "nuskriaustukai_mediana.txt";
+    std::string failoPavadinimasKietiakai = pagalVidurki ? "kietiakai_vidurkis.txt" : "kietiakai_mediana.txt";
 
-    std::cout << "\n--- Kietiakai (Galutinis balas >= 5) ---\n";
-    spausdintiStudentuGrupe(kietiakai, pagalVidurki);
+    isaugotiStudentuGrupe(nuskriaustukai, failoPavadinimasNuskriaustukai, pagalVidurki);
+    isaugotiStudentuGrupe(kietiakai, failoPavadinimasKietiakai, pagalVidurki);
 }
 
 int main() {
     std::vector<Studentas> studentai;
+    studentai.reserve(10000000);
+
     int pasirinkimas;
 
     std::cout << "Pasirinkite: 1 - generuoti failus, 2 - nuskaityti is failo: ";
@@ -118,7 +130,7 @@ int main() {
     std::cin >> rusiavimoPasirinkimas;
 
     bool pagalVidurki = (rusiavimoPasirinkimas == 1);
-    grupuotiStudentus(studentai, pagalVidurki);
+    grupuotiIrIssaugotiStudentus(studentai, pagalVidurki);
 
     return 0;
 }
