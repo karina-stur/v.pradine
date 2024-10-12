@@ -3,8 +3,54 @@
 #include <sstream>
 #include <algorithm>
 #include <iomanip>
+#include <random>
 #include <stdexcept>
 #include "funkcijos.h"
+
+void generuotiStudentuFailus() {
+    std::vector<int> record_counts = { 1000, 10000, 100000, 1000000, 10000000 };
+
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<int> dist(1, 10);
+
+    for (int count : record_counts) {
+        std::string filename = "studentai_" + std::to_string(count) + ".txt";
+
+        std::ifstream infile(filename);
+        if (infile.good()) {
+            std::cout << "Failas " << filename << " jau egzistuoja. Jo sugeneruoti nereikia." << std::endl;
+            continue;
+        }
+        infile.close();
+
+        std::ofstream file(filename);
+        if (!file.is_open()) {
+            std::cerr << "Nepavyko sukurti failo: " << filename << std::endl;
+            continue;
+        }
+
+        file << std::left << std::setw(20) << "Vardas"
+            << std::setw(20) << "Pavarde";
+        for (int i = 1; i <= 15; ++i) {
+            file << std::setw(10) << ("ND" + std::to_string(i));
+        }
+        file << "Egz" << std::endl;
+
+        for (int i = 1; i <= count; ++i) {
+            file << std::left << std::setw(20) << ("Vardas" + std::to_string(i))
+                << std::setw(20) << ("Pavarde" + std::to_string(i));
+            for (int j = 0; j < 15; ++j) {
+                file << std::setw(10) << dist(gen);
+            }
+            file << dist(gen) << std::endl;
+        }
+
+        file.close();
+        std::cout << "Sukurtas failas: " << filename << " su " << count << " irasu." << std::endl;
+    }
+}
+
 
 void nuskaititiIsFailo(const std::string& failoPavadinimas, std::vector<Studentas>& studentai) {
     std::ifstream failas(failoPavadinimas, std::ios::in | std::ios::binary);
