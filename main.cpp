@@ -37,6 +37,50 @@ int readInteger() {
     return value;
 }
 
+void spausdintiStudentuGrupe(const std::vector<Studentas>& studentai, bool pagalVidurki) {
+    std::cout << std::left << std::setw(15) << "Vardas"
+        << std::setw(15) << "Pavarde"
+        << std::setw(20) << "Galutinis (Vid.)"
+        << std::setw(20) << "Galutinis (Med.)"
+        << std::endl;
+    std::cout << "--------------------------------------------------------------" << std::endl;
+
+    for (const auto& studentas : studentai) {
+        double galutinisVid = skaiciuotiGalutiniVidurki(studentas.namuDarbai, studentas.egzaminas);
+        double galutinisMed = skaiciuotiGalutiniMediana(studentas.namuDarbai, studentas.egzaminas);
+
+        std::cout << std::left << std::setw(15) << studentas.vardas
+            << std::setw(15) << studentas.pavarde
+            << std::setw(20) << std::fixed << std::setprecision(2) << galutinisVid
+            << std::setw(20) << std::fixed << std::setprecision(2) << galutinisMed
+            << std::endl;
+    }
+}
+
+void grupuotiStudentus(const std::vector<Studentas>& studentai, bool pagalVidurki) {
+    std::vector<Studentas> nuskriaustukai;
+    std::vector<Studentas> kietiakai;
+
+    for (const auto& studentas : studentai) {
+        double galutinisBalas = pagalVidurki
+            ? skaiciuotiGalutiniVidurki(studentas.namuDarbai, studentas.egzaminas)
+            : skaiciuotiGalutiniMediana(studentas.namuDarbai, studentas.egzaminas);
+
+        if (galutinisBalas < 5) {
+            nuskriaustukai.push_back(studentas);
+        }
+        else {
+            kietiakai.push_back(studentas);
+        }
+    }
+
+    std::cout << "\n--- Nuskriaustukai (Galutinis balas < 5) ---\n";
+    spausdintiStudentuGrupe(nuskriaustukai, pagalVidurki);
+
+    std::cout << "\n--- Kietiakai (Galutinis balas >= 5) ---\n";
+    spausdintiStudentuGrupe(kietiakai, pagalVidurki);
+}
+
 int main() {
     std::vector<Studentas> studentai;
     int pasirinkimas;
@@ -69,24 +113,12 @@ int main() {
 
     surikiuotiStudentus(studentai);
 
-    std::cout << std::left << std::setw(15) << "Vardas"
-        << std::setw(15) << "Pavarde"
-        << std::setw(20) << "Galutinis (Vid.)"
-        << std::setw(20) << "Galutinis (Med.)"
-        << std::endl;
+    std::cout << "Pasirinkite rusiavimo buda: 1 - pagal vidurki, 2 - pagal mediana: ";
+    int rusiavimoPasirinkimas;
+    std::cin >> rusiavimoPasirinkimas;
 
-    std::cout << "--------------------------------------------------------------" << std::endl;
-
-    for (const auto& studentas : studentai) {
-        double galutinisVid = skaiciuotiGalutiniVidurki(studentas.namuDarbai, studentas.egzaminas);
-        double galutinisMed = skaiciuotiGalutiniMediana(studentas.namuDarbai, studentas.egzaminas);
-
-        std::cout << std::left << std::setw(15) << studentas.vardas
-            << std::setw(15) << studentas.pavarde
-            << std::setw(20) << std::fixed << std::setprecision(2) << galutinisVid
-            << std::setw(20) << std::fixed << std::setprecision(2) << galutinisMed
-            << std::endl;
-    }
+    bool pagalVidurki = (rusiavimoPasirinkimas == 1);
+    grupuotiStudentus(studentai, pagalVidurki);
 
     return 0;
 }
