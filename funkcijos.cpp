@@ -7,7 +7,7 @@
 #include "funkcijos.h"
 
 void nuskaititiIsFailo(const std::string& failoPavadinimas, std::vector<Studentas>& studentai) {
-    std::ifstream failas(failoPavadinimas);
+    std::ifstream failas(failoPavadinimas, std::ios::in | std::ios::binary);
     if (!failas.is_open()) {
         throw std::runtime_error("Nepavyko atidaryti failo: " + failoPavadinimas);
     }
@@ -15,27 +15,50 @@ void nuskaititiIsFailo(const std::string& failoPavadinimas, std::vector<Studenta
     std::string header;
     std::getline(failas, header);
 
-    Studentas studentas;
-    std::string eilute;
+    studentai.reserve(10000000);
 
-    while (std::getline(failas, eilute)) {
-        std::istringstream iss(eilute);
-        iss >> studentas.vardas >> studentas.pavarde;
+    const size_t bufferSize = 32 * 1024 * 1024;
+    std::vector<char> buffer(bufferSize);
 
-        studentas.namuDarbai.clear();
-        int nd;
-        while (iss >> nd) {
-            studentas.namuDarbai.push_back(nd);
+    std::vector<int> pazymiai;
+    pazymiai.reserve(100);
+
+    while (failas.read(buffer.data(), buffer.size()) || failas.gcount()) {
+        char* lineStart = buffer.data();
+        char* lineEnd = lineStart;
+
+        while ((lineEnd = std::strchr(lineStart, '\n'))) {
+            *lineEnd = '\0';
+
+            Studentas studentas;
+            pazymiai.clear();
+
+            char* context = nullptr;
+            char* token = strtok_s(lineStart, " ", &context);
+            if (token) studentas.vardas = token;
+
+            token = strtok_s(nullptr, " ", &context);
+            if (token) studentas.pavarde = token;
+
+            int nd;
+            while ((token = strtok_s(nullptr, " ", &context)) != nullptr) {
+                nd = std::stoi(token);
+                pazymiai.push_back(nd);
+            }
+
+            if (!pazymiai.empty()) {
+                studentas.egzaminas = pazymiai.back();
+                pazymiai.pop_back();
+            }
+            else {
+                throw std::runtime_error("Nera namu darbu duomenu studentui: " + studentas.vardas + " " + studentas.pavarde);
+            }
+
+            studentas.namuDarbai = pazymiai;
+            studentai.push_back(std::move(studentas));
+
+            lineStart = lineEnd + 1;
         }
-
-        if (studentas.namuDarbai.empty()) {
-            throw std::runtime_error("Nera namu darbu duomenu studentui: " + studentas.vardas + " " + studentas.pavarde);
-        }
-
-        studentas.egzaminas = studentas.namuDarbai.back();
-        studentas.namuDarbai.pop_back();
-
-        studentai.push_back(studentas);
     }
 }
 
